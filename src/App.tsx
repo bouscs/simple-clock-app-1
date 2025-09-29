@@ -1,36 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [time, setTime] = useState(new Date())
 
-  console.log(import.meta.env)
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTime(new Date())
+    }, 1000)
+
+    return () => clearInterval(intervalId)
+  }, [])
+
+  const hours = time.getHours().toString().padStart(2, '0')
+  const minutes = time.getMinutes().toString().padStart(2, '0')
+  const seconds = time.getSeconds().toString().padStart(2, '0')
+
+  const date = time.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="clock-container">
+      <div className="clock-display">
+        <div className="time">
+          <span className="time-segment">{hours}</span>
+          <span className="time-separator">:</span>
+          <span className="time-segment">{minutes}</span>
+          <span className="time-separator">:</span>
+          <span className="time-segment">{seconds}</span>
+        </div>
+        <div className="date">{date}</div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
